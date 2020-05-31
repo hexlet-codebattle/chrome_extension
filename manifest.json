@@ -1,0 +1,39 @@
+{
+  "name": "codebattle-web-extension",
+  "description": "Web-extension for CodeBattle",
+  "homepage_url": "https://codebattle.hexlet.io/",
+  "version": "0.1.0",
+  "manifest_version": 2,
+  "icons": {
+    "48": "assets/icon-48.png"
+  },
+  "browser_action": {
+    "default_title": "CodeBattle webExtension",
+    "default_popup": "popup/index.html"
+  },
+  "background": {
+    "scripts": ["background/background.js"],
+    "persistent": true
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["content/content.js"]
+    }
+  ],
+  "options_ui": {
+    "page": "options/index.html"
+  },
+  "web_accessible_resources": ["assets/*"],
+  "permissions": [
+    "*://codebattle.hexlet.io/",
+    "activeTab",
+    "tabs",
+    "cookies",
+    "windows",
+    "storage",
+    "theme",
+    "webNavigation",
+    "webRequest"
+  ]
+}
