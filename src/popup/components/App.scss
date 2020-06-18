@@ -1,1 +1,25 @@
 @import "node_modules/bootstrap/scss/bootstrap";
+
+:root {
+  --medium-height: 10vh;
+}
+
+body {
+  min-height: 500px;
+  min-width: 400px;
+  max-height: 500px;
+  max-width: 600px;
+  padding: 1rem 0;
+}
+img,
+header {
+  height: var(--medium-height);
+}
+a {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+h3 {
+  display: inline-block;
+}
