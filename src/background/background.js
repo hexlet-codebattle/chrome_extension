@@ -4,7 +4,13 @@ const browser = require('webextension-polyfill');
 const socket = new WebSocket('wss://codebattle.hexlet.io/extension/websocket?vsn=2.0.0');
 let popup;
 const postMessage = msg => popup && popup.postMessage(msg);
-let state = {};
+const setBadge = text => browser.browserAction.setBadgeText({ text });
+const state = {
+  games: {},
+  user: {},
+  info: {},
+};
+
 browser.runtime.onConnect.addListener(port => {
   popup = port;
 
@@ -21,8 +27,7 @@ browser.runtime.onConnect.addListener(port => {
 
 const getLobby = () => socket.send(JSON.stringify(['7', '7', 'lobby', 'phx_join', {}]));
 const ping = () => socket.send(JSON.stringify([null, '8', 'phoenix', 'heartbeat', {}]));
-
-socket.onopen = function () {
+socket.onopen = () => {
   setInterval(ping, 6000);
   getLobby();
 };
@@ -30,20 +35,22 @@ socket.onmessage = event => {
   const message = JSON.parse(event.data);
   const [, , channel, phx_reply, info] = message;
   if (channel === 'lobby') {
+    console.log('Current State = ', state);
+    console.log('Message = ', message);
     try {
       switch (phx_reply) {
         case 'phx_reply': {
           const { active_games } = info.response;
 
           console.log('Info = ', info);
-          state = info.response;
-          browser.browserAction.setBadgeText({ text: `${active_games.length}` });
+          state.games = info.response;
+          setBadge(`${active_games.length}`);
           postMessage(state);
           break;
         }
         case 'game:upsert': {
           state.games.active_games.push(info.game);
-          browser.browserAction.setBadgeText({ text: `${state.games.active_games.length}` });
+          setBadge(`${state.games.active_games.length}`);
           postMessage(state);
           break;
         }
@@ -51,7 +58,7 @@ socket.onmessage = event => {
         case 'game:remove': {
           const { id } = info;
           state.games.active_games = state.games.active_games.filter(game => game.id !== id);
-          browser.browserAction.setBadgeText({ text: `${state.games.active_games.length}` });
+          setBadge(`${state.games.active_games.length}`);
           postMessage(state);
           break;
         }
@@ -62,6 +69,7 @@ socket.onmessage = event => {
       console.log(`Error in bg: ${err}`);
     }
   }
+  console.log('Next State = ', state);
 };
 socket.onerror = error => { console.log('WS got error = ', error); };
 socket.onclose = dsc => { console.log('WS disconnected ', dsc); };
