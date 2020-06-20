@@ -1,5 +1,21 @@
 import React from 'react';
 import './App.scss';
+import levelToClass from '../config/levelToClass';
+import UserName from './UserName';
+
+const renderGameLevelBadge = level => (
+  <div>
+    <span className={`badge badge-pill badge-${levelToClass[level]} mr-1`}>
+      {level}
+    </span>
+  </div>
+);
+const dateToHHMM = date => {
+  const formatLeadZero = num => ((num < 10) ? `0${num}` : num);
+  const hour = formatLeadZero(date.getHours());
+  const minute = formatLeadZero(date.getMinutes());
+  return `${hour}:${minute}`;
+};
 
 export default ({ state }) => {
   console.log('State in popup = ', state);
@@ -9,28 +25,17 @@ export default ({ state }) => {
       id, level, players, state: gameState, inserted_at: startedAt,
     } = game;
     const link = `https://codebattle.hexlet.io/games/${id}`;
-    const showPlayersInfo = ([first, second]) => (
-      <div>
-        <div className="first">
-          <span>{first.name}</span>
-          <span>{first.editor_lang}</span>
-          <span>{first.raiting}</span>
-        </div>
-        {second && (
-        <div className="second">
-          <span>{second.name}</span>
-          <span>{second.editor_lang}</span>
-          <span>{second.raiting}</span>
-        </div>
-        )}
-      </div>
+    const showPlayersInfo = ([first]) => (
+      <span className="first">
+        <UserName user={first} />
+      </span>
     );
     return (
       <tr key={id}>
-        <td>{level}</td>
+        <td>{renderGameLevelBadge(level)}</td>
         <td>{gameState}</td>
         <td>{showPlayersInfo(players)}</td>
-        <td>{startedAt}</td>
+        <td>{dateToHHMM(new Date(startedAt))}</td>
         <td>
           <a href={link} className="btn btn-primary" tabIndex="-1" role="button" aria-disabled="true" target="_ablank">Join</a>
         </td>
@@ -52,7 +57,7 @@ export default ({ state }) => {
               <th>Level</th>
               <th>Game status</th>
               <th>Players</th>
-              <th>Game started at:</th>
+              <th>Time</th>
               <th>Action</th>
             </tr>
           </thead>
