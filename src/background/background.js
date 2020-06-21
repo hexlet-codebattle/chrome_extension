@@ -5,8 +5,8 @@ const socket = new WebSocket('wss://codebattle.hexlet.io/extension/websocket?vsn
 let popup;
 const postMessage = msg => popup && popup.postMessage(msg);
 const setBadge = text => browser.browserAction.setBadgeText({ text });
-const getCountGamesWithPlayers = ({ games: { active_games } }) => (
-  active_games.filter(({ is_bot }) => !is_bot).length
+const getCountGames = ({ games: { active_games } }) => (
+  active_games.length
 );
 const state = {
   games: {},
@@ -43,15 +43,16 @@ socket.onmessage = event => {
     try {
       switch (phx_reply) {
         case 'phx_reply': {
-          console.log('Info = ', info);
-          state.games = info.response;
-          setBadge(`${getCountGamesWithPlayers(state)}`);
+          state.games.active_games = info.response.active_games.filter(game => !game.is_bot);
+          setBadge(`${getCountGames(state)}`);
           postMessage(state);
           break;
         }
         case 'game:upsert': {
-          state.games.active_games.push(info.game);
-          setBadge(`${getCountGamesWithPlayers(state)}`);
+          if (!info.game.is_bot) {
+            state.games.active_games = [...state.games.active_games, info.game];
+          }
+          setBadge(`${getCountGames(state)}`);
           postMessage(state);
           break;
         }
@@ -59,7 +60,7 @@ socket.onmessage = event => {
         case 'game:remove': {
           const { id } = info;
           state.games.active_games = state.games.active_games.filter(game => game.id !== id);
-          setBadge(`${getCountGamesWithPlayers(state)}`);
+          setBadge(`${getCountGames(state)}`);
           postMessage(state);
           break;
         }

@@ -6,11 +6,8 @@ export default ({ state }) => {
   const { active_games: activeGames } = state.games;
   const showGameInfo = () => activeGames.map(game => {
     const {
-      id, level, players, state: gameState, inserted_at: startedAt, is_bot: isGameWithBot,
+      id, level, players, state: gameState, inserted_at: startedAt,
     } = game;
-    if (isGameWithBot) {
-      return <></>;
-    }
     const link = `https://codebattle.hexlet.io/games/${id}`;
     const showPlayersInfo = ([first, second]) => (
       <div>
