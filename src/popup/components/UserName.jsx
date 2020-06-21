@@ -26,19 +26,19 @@ const UserName = ({ user }) => {
     <div
       className="d-inline align-middle"
     >
-      <span className="d-flex align-items-center">
+      <div className="d-flex align-items-center">
         <a
           href={`/users/${id}`}
           key={id}
           className="d-flex align-items-center mr-1 text-truncate"
         >
-          <span className="text-truncate">{getName(user)}</span>
+          <div className="text-truncate">{getName(user)}</div>
         </a>
         <LanguageIcon lang={lang} />
         <small width="100">
           {Number.isFinite(rating) && rating}
         </small>
-      </span>
+      </div>
     </div>
   );
 };

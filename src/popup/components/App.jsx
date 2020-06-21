@@ -3,6 +3,16 @@ import './App.scss';
 import levelToClass from '../config/levelToClass';
 import UserName from './UserName';
 
+const status = {
+  initial: 'initial',
+  waiting_opponent: 'waiting',
+  playing: 'playing',
+  game_over: 'game_over',
+  stored: 'stored',
+  timeout: 'timeout',
+  rematch_rejected: 'rematch_rejected',
+  rematch_in_approval: 'rematch_in_approval',
+};
 const renderGameLevelBadge = level => (
   <div>
     <span className={`badge badge-pill badge-${levelToClass[level]} mr-1`}>
@@ -25,19 +35,20 @@ export default ({ state }) => {
       id, level, players, state: gameState, inserted_at: startedAt,
     } = game;
     const link = `https://codebattle.hexlet.io/games/${id}`;
-    const showPlayersInfo = ([first]) => (
-      <span className="first">
+    const showPlayersInfo = ([first, second]) => (
+      <>
         <UserName user={first} />
-      </span>
+        {second && <UserName user={second} />}
+      </>
     );
     return (
       <tr key={id}>
-        <td>{renderGameLevelBadge(level)}</td>
-        <td>{gameState}</td>
-        <td>{showPlayersInfo(players)}</td>
-        <td>{dateToHHMM(new Date(startedAt))}</td>
-        <td>
-          <a href={link} className="btn btn-primary" tabIndex="-1" role="button" aria-disabled="true" target="_ablank">Join</a>
+        <td className="align-middle">{renderGameLevelBadge(level)}</td>
+        <td className="align-middle">{status[gameState]}</td>
+        <td className="align-middle">{showPlayersInfo(players)}</td>
+        <td className="align-middle">{dateToHHMM(new Date(startedAt))}</td>
+        <td className="align-middle">
+          <a href={link} className="btn btn-outline-primary btn-sm" tabIndex="-1" role="button" aria-disabled="true" target="_ablank">Join</a>
         </td>
       </tr>
     );
@@ -45,9 +56,9 @@ export default ({ state }) => {
   return (
     <>
       <header>
-        <a href="https://codebattle.hexlet.io/" target="_ablank">
+        <a className="d-flex align-items-center" href="https://codebattle.hexlet.io/" target="_ablank">
           <img src="../../assets/icon-48.png" alt="Logo" />
-          <h3>Welcome to CodeBattle</h3>
+          <div className="btn btn-lg btn-outline-primary">Welcome to CodeBattle</div>
         </a>
       </header>
       <main>
@@ -57,7 +68,7 @@ export default ({ state }) => {
               <th>Level</th>
               <th>Game status</th>
               <th>Players</th>
-              <th>Time</th>
+              <th>CreatedAt</th>
               <th>Action</th>
             </tr>
           </thead>
