@@ -57,7 +57,7 @@ export default ({ state }) => {
     <>
       <header>
         <a className="d-flex align-items-center" href="https://codebattle.hexlet.io/" target="_ablank">
-          <img src="../../assets/icon-48.png" alt="Logo" />
+          <img src="../../assets/128.png" alt="Logo" />
           <div className="btn btn-lg btn-outline-primary">Welcome to CodeBattle</div>
         </a>
       </header>

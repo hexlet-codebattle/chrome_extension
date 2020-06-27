@@ -4,7 +4,9 @@ const browser = require('webextension-polyfill');
 const socket = new WebSocket('wss://codebattle.hexlet.io/extension/websocket?vsn=2.0.0');
 let popup;
 const postMessage = msg => popup && popup.postMessage(msg);
-const setBadge = text => browser.browserAction.setBadgeText({ text });
+const setBadge = number => (number > 0
+  ? browser.browserAction.setBadgeText({ text: `${number}` })
+  : browser.browserAction.setBadgeText({ text: null }));
 const getCountGames = ({ games: { active_games } }) => (
   active_games.length
 );
@@ -44,7 +46,7 @@ socket.onmessage = event => {
       switch (phx_reply) {
         case 'phx_reply': {
           state.games.active_games = info.response.active_games.filter(game => !game.is_bot);
-          setBadge(`${getCountGames(state)}`);
+          setBadge(getCountGames(state));
           postMessage(state);
           break;
         }
@@ -52,7 +54,7 @@ socket.onmessage = event => {
           if (!info.game.is_bot) {
             state.games.active_games = [...state.games.active_games, info.game];
           }
-          setBadge(`${getCountGames(state)}`);
+          setBadge(getCountGames(state));
           postMessage(state);
           break;
         }
@@ -60,7 +62,7 @@ socket.onmessage = event => {
         case 'game:remove': {
           const { id } = info;
           state.games.active_games = state.games.active_games.filter(game => game.id !== id);
-          setBadge(`${getCountGames(state)}`);
+          setBadge(getCountGames(state));
           postMessage(state);
           break;
         }
