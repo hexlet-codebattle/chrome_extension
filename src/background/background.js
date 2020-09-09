@@ -52,13 +52,21 @@ socket.onmessage = event => {
         }
         case 'game:upsert': {
           if (!info.game.is_bot) {
+            const { game: { id } } = info;
+            state.games.active_games = state.games.active_games.filter(game => game.id !== id);
             state.games.active_games = [...state.games.active_games, info.game];
+            setBadge(getCountGames(state));
+            postMessage(state);
           }
+          break;
+        }
+        case 'game:finish': {
+          const { game: { id } } = info;
+          state.games.active_games = state.games.active_games.filter(game => game.id !== id);
           setBadge(getCountGames(state));
           postMessage(state);
           break;
         }
-        case 'game:finish':
         case 'game:remove': {
           const { id } = info;
           state.games.active_games = state.games.active_games.filter(game => game.id !== id);
