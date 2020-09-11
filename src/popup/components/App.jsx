@@ -13,6 +13,20 @@ const status = {
   rematch_rejected: 'rematch_rejected',
   rematch_in_approval: 'rematch_in_approval',
 };
+
+const getAction = gameStatus => {
+  switch (gameStatus) {
+    case 'playing': {
+      return 'show';
+    }
+    case 'waiting_opponent': {
+      return 'join';
+    }
+    default:
+      return null;
+  }
+};
+
 const renderGameLevelBadge = level => (
   <div>
     <span className={`badge badge-pill badge-${levelToClass[level]} mr-1`}>
@@ -48,7 +62,11 @@ export default ({ state }) => {
         <td className="align-middle">{showPlayersInfo(players)}</td>
         <td className="align-middle">{dateToHHMM(new Date(startedAt))}</td>
         <td className="align-middle">
-          <a href={link} className="btn btn-outline-primary btn-sm" tabIndex="-1" role="button" aria-disabled="true" target="_ablank">Join</a>
+          {getAction(gameState) && (
+          <a href={link} className="btn btn-outline-primary btn-sm" tabIndex="-1" role="button" aria-disabled="true" target="_ablank">
+            {getAction(gameState)}
+          </a>
+          )}
         </td>
       </tr>
     );
