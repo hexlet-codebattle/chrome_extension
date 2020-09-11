@@ -16,10 +16,8 @@ img,
 header {
   height: var(--medium-height);
 }
-a {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+#root > * {
+  margin-bottom: .5rem;
 }
 h3 {
   display: inline-block;

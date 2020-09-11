@@ -29,6 +29,7 @@ const UserName = ({ user }) => {
       <div className="d-flex align-items-center">
         <a
           href={`/users/${id}`}
+          target="_ablank"
           key={id}
           className="d-flex align-items-center mr-1 text-truncate"
         >
