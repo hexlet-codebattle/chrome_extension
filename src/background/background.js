@@ -14,11 +14,29 @@ const state = {
   games: {},
   user: {},
   info: {},
+  badgeFlashTimer: null,
 };
-
+const stopFlashingBadge = () => {
+  window.clearTimeout(state.badgeFlashTimer);
+  browser.browserAction.setBadgeBackgroundColor({ color: [0, 0, 0, 0] });
+  browser.browserAction.setTitle({ title: 'CodeBattle webExtension' });
+};
+const flashBadge = () => {
+  let flashing = true;
+  function flash() {
+    if (flashing) {
+      browser.browserAction.setBadgeBackgroundColor({ color: [0, 0, 0, 0] });
+    } else {
+      browser.browserAction.setBadgeBackgroundColor({ color: '#FF0000' });
+    }
+    flashing = !flashing;
+    browser.browserAction.setTitle({ title: `CodeBattle webExtension: ${getCountGames(state)} new games available` });
+  }
+  state.badgeFlashTimer = window.setInterval(flash, 500);
+};
 browser.runtime.onConnect.addListener(port => {
   popup = port;
-
+  stopFlashingBadge();
   popup.onMessage.addListener(msg => {
     if (msg.action === 'getState') {
       popup.postMessage({ ...state });
@@ -65,6 +83,9 @@ socket.onmessage = event => {
           state.games.active_games = state.games.active_games.filter(game => game.id !== id);
           setBadge(getCountGames(state));
           postMessage(state);
+          if (info.game.state === 'waiting_opponent') {
+            flashBadge();
+          }
           break;
         }
         case 'game:remove': {
