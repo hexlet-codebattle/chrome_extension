@@ -73,9 +73,11 @@ export default ({ state }) => {
   });
   return (
     <>
-      <header>
-        <a className="d-flex align-items-center" href="https://codebattle.hexlet.io/" target="_ablank">
+      <header className="d-flex justify-content-between">
+        <a href="https://codebattle.hexlet.io/" target="_ablank">
           <img src="../../assets/128.png" alt="Logo" />
+        </a>
+        <a href="https://codebattle.hexlet.io/" target="_ablank">
           <div className="btn btn-lg btn-outline-primary">Welcome to CodeBattle</div>
         </a>
       </header>

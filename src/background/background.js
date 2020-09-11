@@ -71,8 +71,8 @@ socket.onmessage = event => {
         case 'game:upsert': {
           if (!info.game.is_bot) {
             const { game: { id } } = info;
-            state.games.active_games = state.games.active_games.filter(game => game.id !== id);
-            state.games.active_games = [...state.games.active_games, info.game];
+            const currentGames = state.games.active_games.filter(game => game.id !== id);
+            state.games.active_games = [...currentGames, info.game];
             setBadge(getCountGames(state));
             postMessage(state);
           }

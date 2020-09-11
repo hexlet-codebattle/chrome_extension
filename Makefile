@@ -1,5 +1,5 @@
 install:
-	npm run install
+	npm install
 
 develop:
 	npm run watch:dev
