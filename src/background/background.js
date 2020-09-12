@@ -30,7 +30,7 @@ const flashBadge = () => {
       browser.browserAction.setBadgeBackgroundColor({ color: '#FF0000' });
     }
     flashing = !flashing;
-    browser.browserAction.setTitle({ title: `CodeBattle webExtension: ${getCountGames(state)} new games available` });
+    browser.browserAction.setTitle({ title: 'CodeBattle webExtension: new game available' });
   }
   state.badgeFlashTimer = window.setInterval(flash, 500);
 };
@@ -73,6 +73,9 @@ socket.onmessage = event => {
             const { game: { id } } = info;
             const currentGames = state.games.active_games.filter(game => game.id !== id);
             state.games.active_games = [...currentGames, info.game];
+            if (info.game.state === 'waiting_opponent') {
+              flashBadge();
+            }
             setBadge(getCountGames(state));
             postMessage(state);
           }
@@ -83,9 +86,6 @@ socket.onmessage = event => {
           state.games.active_games = state.games.active_games.filter(game => game.id !== id);
           setBadge(getCountGames(state));
           postMessage(state);
-          if (info.game.state === 'waiting_opponent') {
-            flashBadge();
-          }
           break;
         }
         case 'game:remove': {
