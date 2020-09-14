@@ -2,9 +2,8 @@ const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const ejs = require('ejs');
-const ExtensionReloader = require('webpack-extension-reloader');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+
 
 // ?
 const { optimize } = require('webpack');
