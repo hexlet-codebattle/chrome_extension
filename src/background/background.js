@@ -34,9 +34,12 @@ const flashBadge = () => {
   }
   state.badgeFlashTimer = window.setInterval(flash, 500);
 };
+const animateBadge = (timeout = 3000) => {
+  flashBadge();
+  setTimeout(() => stopFlashingBadge(), timeout);
+};
 browser.runtime.onConnect.addListener(port => {
   popup = port;
-  stopFlashingBadge();
   popup.onMessage.addListener(msg => {
     if (msg.action === 'getState') {
       popup.postMessage({ ...state });
@@ -74,7 +77,7 @@ socket.onmessage = event => {
             const currentGames = state.games.active_games.filter(game => game.id !== id);
             state.games.active_games = [...currentGames, info.game];
             if (info.game.state === 'waiting_opponent') {
-              flashBadge();
+              animateBadge();
             }
             setBadge(getCountGames(state));
             postMessage(state);
