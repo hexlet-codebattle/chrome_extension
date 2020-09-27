@@ -1,7 +1,8 @@
 /* eslint-disable camelcase */
+// @ts-check
+import { actions$ } from './state';
 
-const socketConnect = ((url, useState, socket = new WebSocket(url)) => {
-  const { getState, updateState } = useState;
+const socketConnect = (url, socket = new WebSocket(url)) => {
   const getLobby = () => socket.send(JSON.stringify(['7', '7', 'lobby', 'phx_join', {}]));
   const ping = () => socket.send(JSON.stringify([null, '8', 'phoenix', 'heartbeat', {}]));
 
@@ -14,43 +15,24 @@ const socketConnect = ((url, useState, socket = new WebSocket(url)) => {
     const message = JSON.parse(event.data);
     const [, , channel, phx_reply, info] = message;
     if (channel === 'lobby') {
-      console.log('Current State = ', getState());
       console.log('Message1 = ', message);
       try {
         switch (phx_reply) {
           case 'phx_reply': {
             const activeGames = info.response.active_games.filter(game => !game.is_bot);
-            updateState({
-              games: { active_games: activeGames },
-            });
+            actions$.next({ type: 'games:add', payload: activeGames });
             break;
           }
+          // emits when added new game
           case 'game:upsert': {
             if (!info.game.is_bot) {
-              const { game: { id } } = info;
-              const currentGames = getState().games.active_games.filter(game => game.id !== id);
-              const activeGames = [...currentGames, info.game];
-              updateState({
-                games: { active_games: activeGames },
-                info,
-              });
+              actions$.next({ type: 'games:update', payload: info.game });
             }
             break;
           }
+          case 'game:remove':
           case 'game:finish': {
-            const { game: { id } } = info;
-            const activeGames = getState().games.active_games.filter(game => game.id !== id);
-            updateState({
-              games: { active_games: activeGames },
-            });
-            break;
-          }
-          case 'game:remove': {
-            const { id } = info;
-            const activeGames = getState().games.active_games.filter(game => game.id !== id);
-            updateState({
-              games: { active_games: activeGames },
-            });
+            actions$.next({ type: 'games:remove', payload: { id: info.id } });
             break;
           }
           default:
@@ -60,10 +42,9 @@ const socketConnect = ((url, useState, socket = new WebSocket(url)) => {
         console.log(`Error in bg: ${err}`);
       }
     }
-    console.log('Next State = ', getState());
   };
   socket.onerror = error => { console.log('WS got error = ', error); };
   socket.onclose = dsc => { console.log('WS disconnected ', dsc); };
-});
+};
 
 export default socketConnect;

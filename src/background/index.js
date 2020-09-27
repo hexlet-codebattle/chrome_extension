@@ -1,20 +1,20 @@
 
-import background from './background';
+import browser from 'webextension-polyfill';
+import { combineLatest } from 'rxjs';
 import socketConnect from './socket';
-import createState from './state';
+import { activeGames$, userState$ } from './state';
 
-export default () => {
-  const initialState = {
-    games: { active_games: [] },
-    user: {},
-    info: {
-      game: {
-        state: '',
-      },
-    },
-    badgeFlashTimerId: null,
-  };
-  const useState = createState(initialState);
-  background(useState);
-  socketConnect('wss://codebattle.hexlet.io/extension/websocket?vsn=2.0.0', useState);
-};
+combineLatest([activeGames$, userState$])
+  .subscribe(([activeGames, userState]) => {
+    browser.runtime.onConnect.addListener(popup => {
+      popup.onMessage.addListener(msg => {
+        if (msg.action === 'getState') {
+          popup.postMessage({ games: { active_games: activeGames }, user: userState });
+        }
+      });
+      popup.onDisconnect.addListener(dsc => {
+        console.log('Port disconnected = ', dsc);
+      });
+    });
+  });
+socketConnect('wss://codebattle.hexlet.io/extension/websocket?vsn=2.0.0');

@@ -9,12 +9,9 @@ const setBadge = number => (number > 0
 const stopFlashingBadge = id => {
   clearInterval(id);
   browser.browserAction.setBadgeBackgroundColor({ color: [0, 0, 0, 0] });
-  browser.browserAction.setTitle({ title: 'CodeBattle webExtension' });
-  console.log('stopinterval', 'stopinterval   ', id);
 };
 const flashBadge = () => {
   let flashing = true;
-  browser.browserAction.setTitle({ title: 'CodeBattle webExtension: new game available' });
   const flash = () => {
     if (flashing) {
       browser.browserAction.setBadgeBackgroundColor({ color: [0, 0, 0, 0] });
