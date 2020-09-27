@@ -88,7 +88,6 @@ const activeGames$ = gamesActions$.pipe(
   tap(action => console.log('Action = ', action)),
   scan(gamesStateReducer),
   tap(changes => console.log('Active Games info Changes = ', changes)),
-  tap(games => games.forEach(game => (game.state === 'waiting_opponent' ? animateBadge() : false))),
 );
 
 
@@ -112,6 +111,10 @@ actions$.subscribe(message => {
 
 activeGames$.subscribe(games => {
   setBadge(games.length);
+  const freeGame = games.find(game => game.state === 'waiting_opponent');
+  if (freeGame) {
+    animateBadge();
+  }
 });
 
 export {
