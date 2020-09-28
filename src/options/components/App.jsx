@@ -1,6 +1,5 @@
 
 import React, { useEffect, useReducer } from 'react';
-import browser from 'webextension-polyfill';
 import Content from './Content';
 import ContextApp from './ContextApp';
 import reducer from '../reducer';
