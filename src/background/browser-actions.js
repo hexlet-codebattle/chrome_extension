@@ -25,10 +25,19 @@ const flashBadge = () => {
 };
 
 const animateBadge = (timeout = 10000) => {
-  const timerId = flashBadge();
-  setTimeout(() => {
-    console.log('animateBadge -> setTimeout', setTimeout);
-    stopFlashingBadge(timerId);
-  }, timeout);
+  window.chrome.storage.sync.get({
+    toggles: {
+      flashing: true,
+    },
+  }, storage => {
+    console.log('animateBadge', storage);
+    if (storage.toggles.flashing) {
+      const timerId = flashBadge();
+      setTimeout(() => {
+        console.log('animateBadge -> setTimeout', setTimeout);
+        stopFlashingBadge(timerId);
+      }, timeout);
+    }
+  });
 };
 export { setBadge, flashBadge, animateBadge };

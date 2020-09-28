@@ -11,8 +11,6 @@ const App = ({ storage }) => {
   useEffect(() => {
     console.log('useEffect', state);
     window.chrome.storage.sync.set(state);
-    // const background = browser.runtime.connect({ name: 'backend' });
-    // background.postMessage({ action: 'setOptions', payload: state });
   }, [state]);
   return (
     <ContextApp.Provider value={{ state, dispatch }}>
