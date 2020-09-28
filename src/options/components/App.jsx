@@ -1,14 +1,24 @@
-import React from 'react';
 
+import React, { useEffect, useReducer } from 'react';
+import browser from 'webextension-polyfill';
+import Content from './Content';
+import ContextApp from './ContextApp';
+import reducer from '../reducer';
 
-export default () => (
-  <div className="container-fluid h-100 row ">
+const App = ({ storage }) => {
+  const initialState = { ...storage };
+  const [state, dispatch] = useReducer(reducer, initialState);
+  useEffect(() => {
+    console.log('useEffect', state);
+    window.chrome.storage.sync.set(state);
+    // const background = browser.runtime.connect({ name: 'backend' });
+    // background.postMessage({ action: 'setOptions', payload: state });
+  }, [state]);
+  return (
+    <ContextApp.Provider value={{ state, dispatch }}>
+      <Content />
+    </ContextApp.Provider>
+  );
+};
 
-    <div className="w-50 h-50 row bg-success col-sm-12 my-auto">
-      <div className="btn btn-block">Название лого</div>
-      <div className="btn">страница настроек</div>
-    </div>
-  </div>
-
-
-);
+export default App;

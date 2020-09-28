@@ -1,9 +1,21 @@
-/* eslint-disable react/jsx-filename-extension */
+
 import ReactDOM from 'react-dom';
 import React from 'react';
-import App from './components/App';
 import './options.scss';
+import App from './components/App';
 
-export default () => {
-  ReactDOM.render(<App />, document.getElementById('root'));
-};
+
+function restoreOptions() {
+  const defaultStorage = {
+    toggles: {
+      flashing: true,
+      notification: true,
+    },
+    popupTheme: 'white',
+  };
+  window.chrome.storage.sync.get(defaultStorage, storage => {
+    console.log('options.jsx', storage);
+    ReactDOM.render(<App storage={storage} />, document.getElementById('root'));
+  });
+}
+document.addEventListener('DOMContentLoaded', restoreOptions);
