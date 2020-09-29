@@ -31,7 +31,7 @@ const config = {
     content: join(__dirname, 'src/content/content.js'),
     background: join(__dirname, 'src/background/'),
     popup: join(__dirname, 'src/popup/popup.js'),
-    options: join(__dirname, 'src/options/options.js'),
+    options: join(__dirname, 'src/options/options.jsx'),
   },
   output: {
     path: join(__dirname, 'dist'),
