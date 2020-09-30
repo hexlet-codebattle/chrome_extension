@@ -85,7 +85,6 @@ const userState$ = userActions$.pipe(
 const gamesActions$ = new ReplaySubject(1);
 const activeGames$ = gamesActions$.pipe(
   startWith(initialState.games.active_games),
-  tap(action => console.log('Action = ', action)),
   scan(gamesStateReducer),
   tap(changes => console.log('Active Games info Changes = ', changes)),
 );
@@ -110,10 +109,9 @@ actions$.subscribe(message => {
 });
 
 activeGames$.subscribe(games => {
-  setBadge(games.length);
-  const freeGame = games.find(game => game.state === 'waiting_opponent');
-  if (freeGame) {
-    animateBadge();
+  const freeGames = games.filter(game => game.state === 'waiting_opponent');
+  if (freeGames) {
+    setBadge(freeGames.length);
   }
 });
 
