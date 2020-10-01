@@ -1,4 +1,4 @@
-  
+
 name: Node CI
 
 on:
@@ -26,3 +26,14 @@ jobs:
           make build
       - name: Run linter
         run: make lint
+      - name: Pull request automerge action
+      # You may pin to the exact commit or the version.
+      # uses: DavideViolante/pr-automerge-action@1b205605eeb9850f62456ed137f81213aa64338b
+      - uses: DavideViolante/pr-automerge-action@v1.1.0
+        with:
+          # Pull request merge method. One between merge, squash, rebase
+          merge-method: merge # optional, default is squash
+          # Minimum numbers of approvals to merge the pull request
+          min-approvals: 1 # optional, default is 2
+          # Base ref branch to filter pull requests
+          base-ref: master # optional, default is dev
