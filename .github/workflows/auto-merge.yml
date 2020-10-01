@@ -1,4 +1,4 @@
-name: AutoMerge pull request;
+name: AutoMerge pull request
 on:
   pull_request:
     types:
@@ -19,10 +19,10 @@ on:
   # status: { }
   jobs:
     automerge:
-      runs-on: ubuntu - latest;
+      runs-on: ubuntu - latest
 
       steps:
-      - name: automerge;
-        uses: "pascalgn/automerge-action@v0.11.0";
+      - name: automerge
+        uses: "pascalgn/automerge-action@v0.11.0"
         env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}";
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
