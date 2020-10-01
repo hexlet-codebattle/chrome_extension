@@ -20,7 +20,8 @@ on:
   jobs:
     automerge:
       runs-on: ubuntu - latest;
-    steps:
+
+      steps:
       - name: automerge;
         uses: "pascalgn/automerge-action@v0.11.0";
         env:
