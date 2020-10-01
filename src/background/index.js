@@ -1,4 +1,3 @@
-
 import browser from 'webextension-polyfill';
 import { combineLatest, Subject } from 'rxjs';
 import socketConnect from './socket';

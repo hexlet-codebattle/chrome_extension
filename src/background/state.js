@@ -7,6 +7,7 @@ import {
   startWith,
 } from 'rxjs/operators';
 import { animateBadge, setBadge } from './browser-actions';
+import Notification from './notification';
 
 const onUpdate = action => {
   if (action.type === 'update') {
@@ -16,6 +17,8 @@ const onUpdate = action => {
       animateBadge();
     }
   }
+  const notification = new Notification();
+  notification.addListener();
 };
 const showWaitingGamesAmount = games => {
   const waitingGames = games.filter(game => game.state === 'waiting_opponent');
