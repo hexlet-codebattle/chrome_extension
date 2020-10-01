@@ -32,7 +32,8 @@ const socketConnect = (url, socket = new WebSocket(url)) => {
           }
           case 'game:remove':
           case 'game:finish': {
-            actions$.next({ type: 'games:remove', payload: { id: info.id } });
+            const id = info.game ? info.game.id : info.id;
+            actions$.next({ type: 'games:remove', payload: { id } });
             break;
           }
           default:

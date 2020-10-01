@@ -8,6 +8,23 @@ import {
 } from 'rxjs/operators';
 import { animateBadge, setBadge } from './browser-actions';
 
+const onUpdate = action => {
+  if (action.type === 'update') {
+    const { state: gameStatus } = action.payload;
+
+    if (gameStatus === 'waiting_opponent') {
+      animateBadge();
+    }
+  }
+};
+const showWaitingGamesAmount = games => {
+  const waitingGames = games.filter(game => game.state === 'waiting_opponent');
+  if (waitingGames.length > 0) {
+    setBadge(waitingGames.length);
+  } else {
+    setBadge('');
+  }
+};
 const initialState = {
   games: { active_games: [] },
   user: {
@@ -86,7 +103,9 @@ const gamesActions$ = new ReplaySubject(1);
 const activeGames$ = gamesActions$.pipe(
   startWith(initialState.games.active_games),
   tap(action => console.log('Action = ', action)),
+  tap(onUpdate),
   scan(gamesStateReducer),
+  tap(showWaitingGamesAmount),
   tap(changes => console.log('Active Games info Changes = ', changes)),
 );
 
@@ -109,13 +128,7 @@ actions$.subscribe(message => {
   }
 });
 
-activeGames$.subscribe(games => {
-  setBadge(games.length);
-  const freeGame = games.find(game => game.state === 'waiting_opponent');
-  if (freeGame) {
-    animateBadge();
-  }
-});
+activeGames$.subscribe();
 
 export {
   userState$,
