@@ -1,5 +1,5 @@
-  
-name: Node CI
+
+name: Build and Lint
 
 on:
   - push
@@ -20,9 +20,11 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+
       - name: Install
         run: |
           make install
           make build
+
       - name: Run linter
         run: make lint
