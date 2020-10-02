@@ -12,10 +12,10 @@ on:
       - unlocked;
     pull_request_review:
       types:
-      - submitted
+        - submitted
     check_suite:
       types:
-      - completed
+        - completed
   # status: { }
 
 jobs:
