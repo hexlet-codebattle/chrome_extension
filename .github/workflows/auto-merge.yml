@@ -10,12 +10,12 @@ on:
       - ready_for_review
       - reopened
       - unlocked;
-  pull_request_review:
-    types:
+    pull_request_review:
+      types:
       - submitted
-  check_suite:
-    types:
-    - completed
+    check_suite:
+      types:
+      - completed
   # status: { }
 
 jobs:
