@@ -6,9 +6,8 @@ import {
   scan,
   startWith,
 } from 'rxjs/operators';
-import { animateBadge, setBadge } from './browser-actions';
+import { animateBadge, displayNotification, setBadge } from './browser-actions';
 import gameStatuses from './models';
-import Notification from './notification';
 
 const onUpdate = action => {
   if (action.type === 'update') {
@@ -16,8 +15,7 @@ const onUpdate = action => {
 
     if (gameStatus === gameStatuses.waiting) {
       animateBadge();
-      const notification = new Notification();
-      notification.addListener();
+      displayNotification();
     }
   }
 };
