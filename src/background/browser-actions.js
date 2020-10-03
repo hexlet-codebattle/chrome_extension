@@ -46,9 +46,9 @@ const animateBadge = (timeout = 10000) => {
   });
 };
 
-const displayNotification = () => {
+const setNotification = () => {
   window.chrome.storage.sync.get(defaultStorage, storage => {
-    console.log('displayNotification', storage);
+    console.log('setNotification', storage);
     if (storage.toggles.notification) {
       const notification = new Notification();
       notification.addListener();
@@ -57,5 +57,5 @@ const displayNotification = () => {
 };
 
 export {
-  setBadge, flashBadge, animateBadge, displayNotification,
+  setBadge, flashBadge, animateBadge, setNotification,
 };
