@@ -43,6 +43,9 @@ const config = {
         exclude: /node_modules/,
         test: /\.(js|jsx)$/,
         loader: 'babel-loader',
+        options: {
+          plugins: ['@babel/plugin-transform-runtime'],
+        },
       },
       {
         test: /\.(scss|css)$/,
