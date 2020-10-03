@@ -1,6 +1,6 @@
 // @ts-check
 
-import { ReplaySubject, Subject } from 'rxjs';
+import { ReplaySubject, combineLatest, Subject } from 'rxjs';
 import {
   tap,
   scan,
@@ -116,6 +116,7 @@ const activeGames$ = gamesActions$.pipe(
 
 const actions$ = new Subject();
 actions$.subscribe(message => {
+  console.log('actions$.subscribe(message => {');
   const { type, payload } = message;
   const [reducer, action] = type.split(':');
   switch (reducer) {
@@ -131,10 +132,20 @@ actions$.subscribe(message => {
       throw new Error(`Unexpected reducer type: ${reducer}`);
   }
 });
-
 activeGames$.subscribe();
 
+let state = {};
+const addToState = part => {
+  state = { ...state, ...part };
+};
+const getState = () => ({ ...state });
+
+combineLatest([activeGames$, userState$]).subscribe(([activeGames, userState]) => {
+  addToState({ ...state, games: { active_games: activeGames }, user: userState });
+});
+
 export {
+  getState,
   userState$,
   activeGames$,
   actions$,
