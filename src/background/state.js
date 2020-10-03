@@ -130,8 +130,6 @@ actions$.subscribe(message => {
   }
 });
 
-activeGames$.subscribe();
-
 export {
   userState$,
   activeGames$,
