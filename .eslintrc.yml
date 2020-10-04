@@ -3,6 +3,7 @@ plugins:
   - react
   - jsx-a11y
   - react-hooks
+  - jest
 env:
   node: true
   browser: true
@@ -25,3 +26,8 @@ rules:
   react/state-in-constructor: 0
   react-hooks/rules-of-hooks: "error"
   react-hooks/exhaustive-deps: "warn"
+  jest/no-disabled-tests: "warn",
+  jest/no-focused-tests: "error",
+  jest/no-identical-title: "error",
+  jest/prefer-to-have-length: "warn",
+  jest/valid-expect: "error"
