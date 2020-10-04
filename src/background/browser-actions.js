@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import browser from 'webextension-polyfill';
 import Notification from './notification';
+import { newGame } from './notification-types';
 
 const defaultStorage = {
   toggles: {
@@ -50,7 +51,7 @@ const setNotification = () => {
   window.chrome.storage.sync.get(defaultStorage, storage => {
     console.log('setNotification', storage);
     if (storage.toggles.notification) {
-      const notification = new Notification();
+      const notification = new Notification('Notification', newGame);
       notification.addListener();
     }
   });
