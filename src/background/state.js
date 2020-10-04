@@ -1,6 +1,6 @@
 // @ts-check
 
-import { ReplaySubject, Subject } from 'rxjs';
+import { ReplaySubject, Subject, BehaviorSubject } from 'rxjs';
 import {
   tap,
   scan,
@@ -89,9 +89,16 @@ const gamesStateReducer = (
       return state;
   }
 };
-// const badgeFlashReducer = (state = initialState.badgeFlashTimerId, action = { type: ''}) => {
+// const badgeStateManager = (action = { type: '', payload: {}}) => {
 //   switch(action.type) {
-//     case 'activate': {
+//     case 'add': {
+
+//       break;
+//     }
+//     case '': {
+//       break;
+//     }
+//     case 'add': {
 //       break;
 //     }
 //   }
@@ -103,7 +110,8 @@ const userState$ = userActions$.pipe(
   tap(changes => console.log('User info Changes = ', changes)),
 );
 
-const gamesActions$ = new ReplaySubject(1);
+// FIXME: move out state from actions pipe
+const gamesActions$ = new BehaviorSubject({});
 const activeGames$ = gamesActions$.pipe(
   startWith(initialState.games.active_games),
   tap(action => console.log('Action = ', action)),

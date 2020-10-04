@@ -10,5 +10,10 @@ build:
 lint:
 	npx eslint . --ext js,jsx
 
-make lint-fix:
+lint-fix:
 	npx eslint . --fix
+
+cypress:
+	npm run cypress
+
+.PHONY: cypress
