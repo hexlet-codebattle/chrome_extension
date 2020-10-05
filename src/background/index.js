@@ -11,12 +11,8 @@ browser.runtime.onConnect.addListener(popup => {
   popup.onMessage.addListener(msg => {
     message$.next(msg);
   });
-  popup.onDisconnect.addListener(dsc => {
-    connected = false;
-    console.log('Port disconnected = ', dsc);
-  });
 
-  combineLatest([activeGames$, userState$, message$])
+  const state = combineLatest([activeGames$, userState$, message$])
     .subscribe(([activeGames, userState, message]) => {
       if (connected) {
         switch (message.action) {
@@ -29,6 +25,12 @@ browser.runtime.onConnect.addListener(popup => {
         }
       }
     });
+
+  popup.onDisconnect.addListener(dsc => {
+    connected = false;
+    console.log('Port disconnected = ', dsc);
+    state.unsubscribe();
+  });
 });
 
 socketConnect('wss://codebattle.hexlet.io/extension/websocket?vsn=2.0.0');
