@@ -42,7 +42,6 @@ const dateToHHMM = date => {
 };
 
 export default ({ state }) => {
-  console.log('State in popup = ', state);
   const { active_games: activeGames } = state.games;
   const showGameInfo = () => activeGames.map(game => {
     const {

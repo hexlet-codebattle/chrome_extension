@@ -28,7 +28,6 @@ browser.runtime.onConnect.addListener(popup => {
 
   popup.onDisconnect.addListener(dsc => {
     connected = false;
-    console.log('Port disconnected = ', dsc);
     state.unsubscribe();
   });
 });

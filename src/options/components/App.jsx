@@ -8,7 +8,6 @@ const App = ({ storage }) => {
   const initialState = { ...storage };
   const [state, dispatch] = useReducer(reducer, initialState);
   useEffect(() => {
-    console.log('useEffect', state);
     window.chrome.storage.sync.set(state);
   }, [state]);
   return (

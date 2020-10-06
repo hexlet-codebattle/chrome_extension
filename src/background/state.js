@@ -64,8 +64,6 @@ const gamesStateReducer = (
   action = { type: '', payload: null },
 ) => {
   const state = activeGames$;
-  console.log('State = ', state);
-  console.log('Action in gameReducer= ', action);
   const { type, payload } = action;
   const value = activeGames$.getValue();
   switch (type) {
@@ -109,14 +107,12 @@ const userActions$ = new ReplaySubject(1);
 const userState$ = userActions$.pipe(
   startWith(initialState.user),
   scan(userStateReducer),
-  tap(changes => console.log('User info Changes = ', changes)),
 );
 
 // FIXME: move out state from actions pipe
 const activeGamesActions$ = new ReplaySubject(1);
 
 const activeGamesChanges$ = activeGamesActions$.pipe(
-  tap(action => console.log('Action = ', action)),
   tap(gamesStateReducer),
 );
 
@@ -145,7 +141,6 @@ activeGamesChanges$
   ).subscribe();
 activeGames$
   .pipe(
-    tap(changes => console.log('New games = ', changes)),
     tap(showWaitingGamesAmount),
   )
   .subscribe();
