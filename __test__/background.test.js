@@ -1,46 +1,74 @@
 import browser from 'webextension-polyfill';
+import WS from 'jest-websocket-mock';
 import socketConnect from '../src/background/socket';
 import gameStatuses from '../src/background/models';
 import phxReply4bots from '../__fixtures__/phxReply4bots';
 import getUpdateResponseWithID from '../__fixtures__/getUpdateResponse';
 import getRemoveResponseWithID from '../__fixtures__/getRemoveResponse';
 
-describe('socket', () => {
-  const fakeSocket = {};
-  socketConnect(('wss://codebattle.hexlet.io/extension/websocket?vsn=2.0.0'), fakeSocket);
+let serverWS = null;
+beforeEach(async () => {
+  jest.clearAllMocks();
+  serverWS = new WS('ws://localhost:1234');
+  serverWS.on('connection', socket => {
+    socket.on('message', data => {
+      switch (data) {
+        case ['7', '7', 'lobby', 'phx_join', {}]:
+          serverWS.send(phxReply4bots);
+          break;
+        case [null, '8', 'phoenix', 'heartbeat', {}]:
+          serverWS.send([null, '8', 'phoenix', 'heartbeat', {}]);
+          break;
+        default:
+          break;
+      }
+    });
+  });
+  socketConnect('ws://localhost:1234');
+  await serverWS.connected;
+});
 
+afterEach(() => {
+  WS.clean();
+});
+
+describe('socket', () => {
   test('phxReply', () => {
-    fakeSocket.onmessage(phxReply4bots);
+    expect(browser.browserAction.setBadgeText).toHaveBeenCalledTimes(0);
+    serverWS.send(phxReply4bots);
     expect(browser.browserAction.setBadgeText).toHaveBeenLastCalledWith({
       text: null,
     });
   });
   test('add games->remove games', () => {
-    fakeSocket.onmessage(getUpdateResponseWithID(1000, gameStatuses.waiting));
+    expect(browser.browserAction.setBadgeText).toHaveBeenCalledTimes(0);
+    serverWS.send(getUpdateResponseWithID(1000, gameStatuses.waiting));
     expect(browser.browserAction.setBadgeText).toHaveBeenLastCalledWith({
       text: '1',
     });
-    fakeSocket.onmessage(getUpdateResponseWithID(1001, gameStatuses.waiting));
+    serverWS.send(getUpdateResponseWithID(1001, gameStatuses.waiting));
     expect(browser.browserAction.setBadgeText).toHaveBeenLastCalledWith({
       text: '2',
     });
-    fakeSocket.onmessage(getRemoveResponseWithID(1001));
+    serverWS.send(getRemoveResponseWithID(1001));
     expect(browser.browserAction.setBadgeText).toHaveBeenLastCalledWith({
       text: '1',
     });
-    fakeSocket.onmessage(getRemoveResponseWithID(1000));
+    serverWS.send(getRemoveResponseWithID(1000));
     expect(browser.browserAction.setBadgeText).toHaveBeenLastCalledWith({
       text: null,
     });
   });
   test('add game -> changeStatus', () => {
-    fakeSocket.onmessage(getUpdateResponseWithID(1002, gameStatuses.waiting));
+    expect(browser.browserAction.setBadgeText).toHaveBeenCalledTimes(0);
+    serverWS.send(getUpdateResponseWithID(1002, gameStatuses.waiting));
     expect(browser.browserAction.setBadgeText).toHaveBeenLastCalledWith({
       text: '1',
     });
-    fakeSocket.onmessage(getUpdateResponseWithID(1002, gameStatuses.joined));
+    serverWS.send(getUpdateResponseWithID(1002, gameStatuses.joined));
     expect(browser.browserAction.setBadgeText).toHaveBeenLastCalledWith({
       text: null,
     });
+    expect(browser.browserAction.setBadgeText).toHaveBeenCalledTimes(2);
   });
 });
