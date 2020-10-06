@@ -28,3 +28,6 @@ jobs:
 
       - name: Run linter
         run: make lint
+
+      - name: Run test
+        run: make jest
