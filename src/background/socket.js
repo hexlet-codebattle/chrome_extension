@@ -15,7 +15,6 @@ const socketConnect = (url, socket = new WebSocket(url)) => {
     const message = JSON.parse(event.data);
     const [, , channel, phx_reply, info] = message;
     if (channel === 'lobby') {
-      console.log('Message1 = ', message);
       try {
         switch (phx_reply) {
           case 'phx_reply': {
