@@ -12,3 +12,9 @@ lint:
 
 make lint-fix:
 	npx eslint . --fix
+
+test:
+	npx jest
+
+test-watch:
+	npx jest --watch

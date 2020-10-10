@@ -1,6 +1,6 @@
 // @ts-check
 
-import { ReplaySubject, Subject } from 'rxjs';
+import { ReplaySubject, Subject, BehaviorSubject } from 'rxjs';
 import {
   tap,
   scan,
@@ -8,6 +8,8 @@ import {
 } from 'rxjs/operators';
 import { animateBadge, setNotification, setBadge } from './browser-actions';
 import gameStatuses from './models';
+
+const activeGames$ = new BehaviorSubject([]);
 
 const onUpdate = action => {
   if (action.type === 'update') {
@@ -57,34 +59,39 @@ const userStateReducer = (state = initialState.user, action = { type: '', payloa
 //   }
 // };
 const gamesStateReducer = (
-  state = initialState.games.active_games,
   action = { type: '', payload: null },
 ) => {
+  const state = activeGames$;
   const { type, payload } = action;
+  const value = activeGames$.getValue();
   switch (type) {
     case 'add': {
-      return [...state, ...payload];
+      state.next([...value, ...payload]);
+      break;
     }
     case 'remove': {
       const { id } = payload;
       if (!id) {
         throw new Error(`Unexpected payload type: ${payload}`);
       }
-      return state.filter(game => game.id !== id);
+      state.next(value.filter(game => game.id !== id));
+      break;
     }
     case 'update': {
       const { id } = payload;
       if (!id) {
         throw new Error(`Unexpected payload type: ${payload}`);
       }
-      const currentGame = state.find(game => game.id === payload.id);
+      const currentGame = value.find(game => game.id === payload.id);
       if (currentGame) {
-        return state.map(game => (game.id === id ? payload : game));
+        state.next(value.map(game => (game.id === id ? payload : game)));
+        break;
       }
-      return [...state, payload];
+      state.next([...value, payload]);
+      break;
     }
     default:
-      return state;
+      throw new Error(`Unexpected type: ${type}`);
   }
 };
 // const badgeFlashReducer = (state = initialState.badgeFlashTimerId, action = { type: ''}) => {
@@ -98,27 +105,23 @@ const userActions$ = new ReplaySubject(1);
 const userState$ = userActions$.pipe(
   startWith(initialState.user),
   scan(userStateReducer),
-  tap(changes => console.log('User info Changes = ', changes)),
 );
 
-const gamesActions$ = new ReplaySubject(1);
-const activeGames$ = gamesActions$.pipe(
-  startWith(initialState.games.active_games),
-  tap(action => console.log('Action = ', action)),
-  tap(onUpdate),
-  scan(gamesStateReducer),
-  tap(showWaitingGamesAmount),
-  tap(changes => console.log('Active Games info Changes = ', changes)),
-);
+// FIXME: move out state from actions pipe
+const activeGamesActions$ = new ReplaySubject(1);
 
+const activeGamesChanges$ = activeGamesActions$.pipe(
+  tap(gamesStateReducer),
+);
 
 const actions$ = new Subject();
+
 actions$.subscribe(message => {
   const { type, payload } = message;
   const [reducer, action] = type.split(':');
   switch (reducer) {
     case 'games': {
-      gamesActions$.next({ type: action, payload });
+      activeGamesActions$.next({ type: action, payload });
       break;
     }
     case 'game':
@@ -129,6 +132,16 @@ actions$.subscribe(message => {
       throw new Error(`Unexpected reducer type: ${reducer}`);
   }
 });
+
+activeGamesChanges$
+  .pipe(
+    tap(onUpdate),
+  ).subscribe();
+activeGames$
+  .pipe(
+    tap(showWaitingGamesAmount),
+  )
+  .subscribe();
 
 export {
   userState$,

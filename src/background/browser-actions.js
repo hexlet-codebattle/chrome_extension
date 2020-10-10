@@ -40,7 +40,6 @@ const animateBadge = (timeout = 10000) => {
     if (storage.toggles.flashing) {
       const timerId = flashBadge();
       setTimeout(() => {
-        console.log('animateBadge -> setTimeout', setTimeout);
         stopFlashingBadge(timerId);
       }, timeout);
     }
