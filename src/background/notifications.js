@@ -11,9 +11,9 @@ const newGame = {
   buttons: [],
 };
 
-const opponentEntered = {
+const opponentJoin = {
   type: 'basic',
-  message: 'Opponent has entered the game',
+  message: 'Opponent has join the game',
   iconUrl: '../assets/128.png',
   eventTime: 23,
   buttons: [
@@ -35,4 +35,4 @@ const newTournament = {
   ],
 };
 
-export { newGame, opponentEntered, newTournament };
+export default { newGame, opponentJoin, newTournament };
