@@ -6,7 +6,7 @@ import {
   scan,
   startWith,
 } from 'rxjs/operators';
-import { animateBadge, setNotification, setBadge } from './browser-actions';
+import { animateBadge, showNotification, setBadge } from './browser-actions';
 import gameStatuses from './models';
 
 const activeGames$ = new BehaviorSubject([]);
@@ -17,7 +17,7 @@ const onUpdate = action => {
 
     if (gameStatus === gameStatuses.waiting) {
       animateBadge();
-      setNotification();
+      showNotification('newGame');
     }
   }
 };
