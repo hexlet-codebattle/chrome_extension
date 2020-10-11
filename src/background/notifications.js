@@ -1,4 +1,3 @@
-import browser from 'webextension-polyfill';
 
 const newGame = {
   type: 'list',

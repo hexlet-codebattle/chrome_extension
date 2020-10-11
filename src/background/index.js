@@ -26,7 +26,7 @@ browser.runtime.onConnect.addListener(popup => {
       }
     });
 
-  popup.onDisconnect.addListener(dsc => {
+  popup.onDisconnect.addListener(() => {
     connected = false;
     state.unsubscribe();
   });
