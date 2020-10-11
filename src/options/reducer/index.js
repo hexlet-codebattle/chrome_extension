@@ -1,4 +1,4 @@
-import { setTheme, setToggle } from '../actions';
+import { setShowNotification, setTheme, setToggle } from '../actions';
 
 export default (state, action) => {
   switch (action.type) {
@@ -6,8 +6,19 @@ export default (state, action) => {
       return {
         ...state,
         toggles: {
-          ...state.toogles,
+          ...state.toggles,
           ...action.payload,
+        },
+      };
+    case setShowNotification:
+      return {
+        ...state,
+        toggles: {
+          ...state.toggles,
+          showNotifications: {
+            ...state.toggles.showNotifications,
+            ...action.payload,
+          },
         },
       };
     case setTheme:

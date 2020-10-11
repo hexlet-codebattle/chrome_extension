@@ -1,27 +1,15 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useContext } from 'react';
-import ContextApp from './ContextApp';
+import React from 'react';
 
-
-export default ({ text, name }) => {
-  const { state, dispatch } = useContext(ContextApp);
-  const checked = state.toggles[name];
-  const handleChange = () => {
-    dispatch({
-      type: 'setToggle',
-      payload: { [name]: !checked },
-    });
-  };
-  return (
-    <div className="custom-control custom-switch pb-2">
-      <input
-        type="checkbox"
-        className="custom-control-input"
-        defaultChecked={checked}
-        onChange={handleChange}
-        id={text}
-      />
-      <label className="custom-control-label" htmlFor={text}>{text}</label>
-    </div>
-  );
-};
+export default ({ description, checked, handleChange }) => (
+  <div className="custom-control custom-switch pb-2">
+    <input
+      type="checkbox"
+      className="custom-control-input"
+      defaultChecked={checked}
+      onChange={handleChange}
+      id={description}
+    />
+    <label className="custom-control-label" htmlFor={description}>{description}</label>
+  </div>
+);

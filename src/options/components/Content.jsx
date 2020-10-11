@@ -1,10 +1,17 @@
 
-import React from 'react';
+import React, { useContext } from 'react';
+import ContextApp from './ContextApp';
+import GroupToggles from './GroupToggles';
 import SelectMenu from './SelectMenu';
 import Toggle from './Toggle';
 
 const themes = ['white', 'black'];
-
+const description = {
+  flashing: 'Blink when a new game added',
+  newGame: 'new game added',
+  newTournament: 'new tournament created',
+  opponentJoin: 'opponent join',
+};
 const Title = () => (
   <div className="row pb-4">
     <h1 className="col text-center">
@@ -16,25 +23,53 @@ const Title = () => (
   </div>
 );
 
-const Body = () => (
-  <form className="h5">
-    <Toggle
-      name="flashing"
-      text="Blink when a new game is added"
-    />
-    <Toggle
-      name="notification"
-      text="Display notification"
-    />
-    <br />
-    <SelectMenu
-      name="popupTheme"
-      text="Pop-up Menu Theme:"
-      options={themes}
-    />
-    <br />
-  </form>
-);
+const Body = () => {
+  const { state, dispatch } = useContext(ContextApp);
+  const { flashing, showNotifications } = state.toggles;
+
+  const handleChangeSetToggle = (name, checked) => () => {
+    dispatch({
+      type: 'setToggle',
+      payload: { [name]: !checked },
+    });
+  };
+  const handleChangeSetShowNotification = (name, checked) => () => {
+    dispatch({
+      type: 'setShowNotification',
+      payload: { [name]: !checked },
+    });
+  };
+  return (
+    <form className="h5">
+      <GroupToggles description="Flashing:">
+        <Toggle
+          description={description.flashing}
+          checked={flashing}
+          handleChange={handleChangeSetToggle('flashing', flashing)}
+        />
+      </GroupToggles>
+
+      <GroupToggles description="Show notifications:">
+        {Object.entries(showNotifications).map(([name, checked]) => (
+          <Toggle
+            key={name}
+            description={description[name]}
+            checked={checked}
+            handleChange={handleChangeSetShowNotification(name, checked)}
+          />
+        ))}
+      </GroupToggles>
+
+      <br />
+      <SelectMenu
+        name="popupTheme"
+        text="Pop-up Menu Theme:"
+        options={themes}
+      />
+
+    </form>
+  );
+};
 
 const Content = () => (
   <div className="container-fluid">

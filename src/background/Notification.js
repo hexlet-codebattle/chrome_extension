@@ -19,6 +19,10 @@ const defaultOptions = {
 
 export default class Notification {
   constructor(id = defaultId, options = defaultOptions) {
+    console.log('Notification -> constructor -> id', id);
+
+    console.log('Notification -> constructor -> options', options);
+
     this.id = id;
     this.options = options;
     this.notication = browser.notifications.create(id, options);
