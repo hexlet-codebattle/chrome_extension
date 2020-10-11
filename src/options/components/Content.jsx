@@ -26,7 +26,6 @@ const Title = () => (
 const Body = () => {
   const { state, dispatch } = useContext(ContextApp);
   const { flashing, showNotifications } = state.toggles;
-  console.log('%c%s', 'color: #00a3cc', JSON.stringify(showNotifications));
 
   const handleChangeSetToggle = (name, checked) => () => {
     dispatch({
