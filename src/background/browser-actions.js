@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import browser from 'webextension-polyfill';
 import defaultStorage from '../options/defaultStorage';
-import createNotification from './Notification';
+import createNotification from './notification';
 import { notifications } from './models';
 
 const setBadge = number => (number > 0
