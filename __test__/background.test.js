@@ -1,7 +1,7 @@
 import browser from 'webextension-polyfill';
 import WS from 'jest-websocket-mock';
 import socketConnect from '../src/background/socket';
-import gameStatuses from '../src/background/models';
+import { gameStatuses } from '../src/background/models';
 import phxReply4bots from '../__fixtures__/phxReply4bots';
 import getUpdateResponseWithID from '../__fixtures__/getUpdateResponse';
 import getRemoveResponseWithID from '../__fixtures__/getRemoveResponse';

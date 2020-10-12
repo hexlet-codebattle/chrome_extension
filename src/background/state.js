@@ -7,7 +7,7 @@ import {
   startWith,
 } from 'rxjs/operators';
 import { animateBadge, showNotification, setBadge } from './browser-actions';
-import gameStatuses from './models';
+import { gameStatuses } from './models';
 
 const activeGames$ = new BehaviorSubject([]);
 
