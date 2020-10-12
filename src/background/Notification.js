@@ -47,6 +47,10 @@ export default class Notification {
 
   addListener() {
     browser.notifications.onButtonClicked.addListener((id, index) => {
+      if (this.options.buttons[index].title === 'Join') {
+        const link = `https://codebattle.hexlet.io/games/${id}`;
+        window.open(link, '_blank');
+      }
       console.log('Id = ', id);
       console.log('Button = ', this.options.buttons[index]);
     });

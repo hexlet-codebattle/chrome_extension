@@ -39,11 +39,12 @@ const animateBadge = (timeout = 10000) => {
   });
 };
 
-const showNotification = notification => {
+const showNotification = (notification, message, id) => {
   window.chrome.storage.sync.get(defaultStorage, storage => {
-    console.log('showNotification', storage);
     if (storage.toggles.showNotifications[notification]) {
-      const popupNotification = new Notification('Notification', notifications[notification]);
+      console.log('showNotification', storage);
+      const currentNotification = { ...notifications[notification], message };
+      const popupNotification = new Notification(id.toString(), currentNotification);
       popupNotification.addListener();
     } else {
       throw new Error('Unexpected notification type = ', notification);
