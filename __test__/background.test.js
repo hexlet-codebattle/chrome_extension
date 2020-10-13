@@ -71,4 +71,14 @@ describe('socket', () => {
     });
     expect(browser.browserAction.setBadgeText).toHaveBeenCalledTimes(2);
   });
+
+  test('add game -> notification called', () => {
+    expect(browser.notifications.create).toHaveBeenCalledTimes(0);
+    serverWS.send(getUpdateResponseWithID(1002, gameStatuses.waiting));
+    expect(browser.notifications.create).toHaveBeenCalledTimes(1);
+    serverWS.send(getUpdateResponseWithID(1003, gameStatuses.waiting));
+    expect(browser.notifications.create).toHaveBeenCalledTimes(2);
+    serverWS.send(getUpdateResponseWithID(1004, gameStatuses.waiting));
+    expect(browser.notifications.create).toHaveBeenCalledTimes(3);
+  });
 });
