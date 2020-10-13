@@ -2,6 +2,7 @@ import browser from 'webextension-polyfill';
 import { combineLatest, Subject } from 'rxjs';
 import socketConnect from './socket';
 import { activeGames$, userState$ } from './state';
+import { handleOnButtonClicked } from './notification';
 
 const message$ = new Subject();
 
@@ -31,5 +32,5 @@ browser.runtime.onConnect.addListener(popup => {
     state.unsubscribe();
   });
 });
-
+browser.notifications.onButtonClicked.addListener(handleOnButtonClicked);
 socketConnect('wss://codebattle.hexlet.io/extension/websocket?vsn=2.0.0');
