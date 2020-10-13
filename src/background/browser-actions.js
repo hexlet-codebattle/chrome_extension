@@ -42,7 +42,7 @@ const animateBadge = (timeout = 10000) => {
 const showNotification = (notification, message, gameID) => {
   window.chrome.storage.sync.get(defaultStorage, storage => {
     if (storage.toggles.showNotifications[notification]) {
-      createNotification(gameID.toString(), notifications[notification], message, gameID);
+      createNotification(gameID.toString(), notifications[notification], message);
     } else {
       throw new Error('Unexpected notification type = ', notification);
     }
