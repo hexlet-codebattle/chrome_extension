@@ -7,17 +7,17 @@ import {
   startWith,
 } from 'rxjs/operators';
 import { animateBadge, showNotification, setBadge } from './browser-actions';
-import gameStatuses from './models';
+import { gameStatuses } from './models';
 
 const activeGames$ = new BehaviorSubject([]);
 
 const onUpdate = action => {
   if (action.type === 'update') {
     const { state: gameStatus } = action.payload;
-
     if (gameStatus === gameStatuses.waiting) {
       animateBadge();
-      showNotification('newGame');
+      const message = `Player - ${action.payload.players[0].name} || game level - ${action.payload.level} || status - ${action.payload.state} `;
+      showNotification('newGame', message, action.payload.id);
     }
   }
 };

@@ -1,8 +1,8 @@
 /* eslint-disable camelcase */
 import browser from 'webextension-polyfill';
 import defaultStorage from '../options/defaultStorage';
-import Notification from './Notification';
-import notifications from './notifications';
+import createNotification from './notification';
+import { notifications } from './models';
 
 const setBadge = number => (number > 0
   ? browser.browserAction.setBadgeText({ text: `${number}` })
@@ -39,12 +39,10 @@ const animateBadge = (timeout = 10000) => {
   });
 };
 
-const showNotification = notification => {
+const showNotification = (notification, message, gameID) => {
   window.chrome.storage.sync.get(defaultStorage, storage => {
-    console.log('showNotification', storage);
     if (storage.toggles.showNotifications[notification]) {
-      const popupNotification = new Notification('Notification', notifications[notification]);
-      popupNotification.addListener();
+      createNotification(gameID.toString(), notifications[notification], message);
     } else {
       throw new Error('Unexpected notification type = ', notification);
     }
