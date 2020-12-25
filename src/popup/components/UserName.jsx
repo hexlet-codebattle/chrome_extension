@@ -1,8 +1,5 @@
 import React from 'react';
-// import i18n from '../../../i18n';
 import LanguageIcon from './LanguageIcon';
-// // import { loadUser } from '../../middlewares/Users';
-// import { usersInfoSelector, currentUserIdSelector } from '../../selectors';
 
 const isValidUserInfo = user => (
   Boolean(user.id === 0 || user.rating)

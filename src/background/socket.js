@@ -2,7 +2,8 @@
 // @ts-check
 import { actions$ } from './state';
 
-const isGameWithPlayer = ({ type }) => type !== 'bot' && type !== 'private';
+// const isGameWithPlayer = ({ type }) => type !== 'bot' && type !== 'private';
+const isGameWithPlayer = ({ type }) => true;
 
 const socketConnect = (url, socket = new WebSocket(url)) => {
   const getLobby = () => socket.send(JSON.stringify(['7', '7', 'lobby', 'phx_join', {}]));
