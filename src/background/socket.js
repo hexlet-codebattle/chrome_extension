@@ -2,6 +2,8 @@
 // @ts-check
 import { actions$ } from './state';
 
+const isGameWithPlayer = ({ type }) => type !== 'bot' && type !== 'private';
+
 const socketConnect = (url, socket = new WebSocket(url)) => {
   const getLobby = () => socket.send(JSON.stringify(['7', '7', 'lobby', 'phx_join', {}]));
   const ping = () => socket.send(JSON.stringify([null, '8', 'phoenix', 'heartbeat', {}]));
@@ -18,13 +20,15 @@ const socketConnect = (url, socket = new WebSocket(url)) => {
       try {
         switch (phx_reply) {
           case 'phx_reply': {
-            const activeGames = info.response.active_games.filter(game => !game.is_bot);
+            const activeGames = info.response.active_games.filter(
+              game => isGameWithPlayer(game),
+            );
             actions$.next({ type: 'games:add', payload: activeGames });
             break;
           }
           // emits when added new game
           case 'game:upsert': {
-            if (!info.game.is_bot) {
+            if (isGameWithPlayer(info.game)) {
               actions$.next({ type: 'games:update', payload: info.game });
             }
             break;
