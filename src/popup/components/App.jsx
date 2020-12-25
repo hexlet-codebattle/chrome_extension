@@ -116,7 +116,8 @@ export default ({ state }) => {
         </a>
       </header>
       <main>
-        <ActiveGames games={activeGames} />
+        {activeGames.length > 0 ? <ActiveGames games={activeGames} />
+          : <div className="cb-border-gray text-center">No games available</div>}
       </main>
       <footer />
     </>
