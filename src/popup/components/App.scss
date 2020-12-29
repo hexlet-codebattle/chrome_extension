@@ -1,24 +1,37 @@
 @import "node_modules/bootstrap/scss/bootstrap";
 @import "~font-mfizz/dist/font-mfizz.css";
+@import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500;600;800&display=swap");
+
+$orange: rgba(238, 55, 55, 0.76);
 
 :root {
   --medium-height: 10vh;
 }
 
 body {
-  min-height: 500px;
   min-width: 500px;
-  max-height: 500px;
   max-width: 600px;
   padding: 1rem 0;
+  background-color: #e5e5e5;
+  font-family: "Source Code Pro", sans-serif;
+
 }
-img,
-header {
-  height: var(--medium-height);
+
+.cb-a {
+  color: #000;
+  text-decoration: none;
 }
-#root > * {
-  margin-bottom: .5rem;
+
+.cb-border-gray {
+  border: 2px solid #d9d9d9;
 }
-h3 {
-  display: inline-block;
+.cb-username-td {
+  max-width: 350px;
+}
+.btn-outline-orange {
+  border-color: $orange;
+  color: $orange;
+  border-radius: 0;
+  border-width: 2px;
+  @include button-outline-variant($orange);
 }

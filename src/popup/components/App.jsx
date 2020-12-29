@@ -1,18 +1,6 @@
 import React from 'react';
 import './App.scss';
-import levelToClass from '../config/levelToClass';
 import UserName from './UserName';
-
-const status = {
-  initial: 'initial',
-  waiting_opponent: 'waiting',
-  playing: 'playing',
-  game_over: 'game_over',
-  stored: 'stored',
-  timeout: 'timeout',
-  rematch_rejected: 'rematch_rejected',
-  rematch_in_approval: 'rematch_in_approval',
-};
 
 const getAction = gameStatus => {
   switch (gameStatus) {
@@ -27,74 +15,109 @@ const getAction = gameStatus => {
   }
 };
 
-const renderGameLevelBadge = level => (
-  <div>
-    <span className={`badge badge-pill badge-${levelToClass[level]} mr-1`}>
-      {level}
-    </span>
+const GameLevelBadge = ({ level }) => (
+  <div
+    className="text-center"
+    data-toggle="tooltip"
+    data-placement="right"
+    title={level}
+  >
+    <img width="20px" alt={level} src={`/assets/levels/${level}.svg`} />
   </div>
 );
-const dateToHHMM = date => {
-  const formatLeadZero = num => ((num < 10) ? `0${num}` : num);
-  const hour = formatLeadZero(date.getHours());
-  const minute = formatLeadZero(date.getMinutes());
-  return `${hour}:${minute}`;
+
+const Players = ({ players }) => {
+  if (players.length === 1) {
+    return (
+      <td className="p-1 align-middle text-nowrap">
+        <div className="d-flex align-items-center">
+          <UserName user={players[0]} />
+        </div>
+      </td>
+    );
+  }
+  return (
+    <>
+      <td className="p-1 align-middle text-nowrap cb-username-td text-truncate">
+        <div className="d-flex align-items-center">
+          <UserName user={players[0]} />
+        </div>
+        <div className="pl-3 d-flex">
+          VS
+        </div>
+        <div className="d-flex align-items-center">
+          <UserName user={players[1]} />
+        </div>
+      </td>
+    </>
+  );
 };
+
+const getLink = id => `https://codebattle.hexlet.io/games/${id}`;
+
+const ActiveGames = ({ games }) => (
+  <div className="table-responsive">
+    <table className="table table-striped cb-border-gray mb-0">
+      <thead className="text-center">
+        <tr>
+          <th className="p-3 border-0">Level</th>
+          <th className="p-3 border-0">State</th>
+          <th className="p-3 border-0 text-center">
+            Players
+          </th>
+          <th className="p-3 border-0">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {games.map(({
+          id, level, state, players,
+        }) => (
+          <tr key={id} className="text-dark game-item">
+            <td className="p-1 align-middle text-nowrap">
+              <GameLevelBadge level={level} />
+            </td>
+            <td className="p-1 align-middle text-center text-nowrap">
+              <img
+                width="20px"
+                alt={state}
+                src={
+                    state === 'playing'
+                      ? '/assets/images/playing.svg'
+                      : '/assets/images/waitingOpponent.svg'
+                  }
+                title={state}
+              />
+            </td>
+            <Players gameId={id} players={players} />
+            <td className="p-1 align-middle text-center">
+              {getAction(state) && (
+              <a href={getLink(id)} className="cb-a btn btn-outline-primary btn-sm btn-outline-orange" tabIndex="-1" role="button" aria-disabled="true" target="_ablank">
+                {getAction(state)}
+              </a>
+              )}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
 
 export default ({ state }) => {
   const { active_games: activeGames } = state.games;
-  const showGameInfo = () => activeGames.map(game => {
-    const {
-      id, level, players, state: gameState, inserted_at: startedAt,
-    } = game;
-    const link = `https://codebattle.hexlet.io/games/${id}`;
-    const showPlayersInfo = ([first, second]) => (
-      <>
-        <UserName user={first} />
-        {second && <UserName user={second} />}
-      </>
-    );
-    return (
-      <tr key={id}>
-        <td className="align-middle">{renderGameLevelBadge(level)}</td>
-        <td className="align-middle">{status[gameState]}</td>
-        <td className="align-middle">{showPlayersInfo(players)}</td>
-        <td className="align-middle">{dateToHHMM(new Date(startedAt))}</td>
-        <td className="align-middle">
-          {getAction(gameState) && (
-          <a href={link} className="btn btn-outline-primary btn-sm" tabIndex="-1" role="button" aria-disabled="true" target="_ablank">
-            {getAction(gameState)}
-          </a>
-          )}
-        </td>
-      </tr>
-    );
-  });
   return (
     <>
-      <header className="d-flex justify-content-between">
+      <header className="cb-a d-flex justify-content-between align-content-center mb-3">
         <a href="https://codebattle.hexlet.io/" target="_ablank">
-          <img src="../../assets/128.png" alt="Logo" />
+          <img className="h-auto" src="../../assets/logo.svg" alt="Logo" />
         </a>
         <a href="https://codebattle.hexlet.io/" target="_ablank">
-          <div className="btn btn-lg btn-outline-primary">Welcome to CodeBattle</div>
+          <div className="cb-a btn  btn-outline-primary btn-outline-orange">Welcome to CodeBattle</div>
         </a>
       </header>
       <main>
-        <table className="table table-sm">
-          <thead>
-            <tr>
-              <th>Level</th>
-              <th>Game status</th>
-              <th>Players</th>
-              <th>CreatedAt</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {activeGames && showGameInfo()}
-          </tbody>
-        </table>
+        {activeGames.length > 0 ? <ActiveGames games={activeGames} />
+          : <div className="cb-border-gray text-center">No games available</div>}
       </main>
       <footer />
     </>
