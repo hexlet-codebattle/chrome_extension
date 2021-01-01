@@ -26,7 +26,6 @@ if (process.env.NODE_ENV === 'production') {
 
 const config = {
   mode: process.env.NODE_ENV,
-  devtool: 'inline-source-map',
   entry: {
     content: join(__dirname, 'src/content/content.js'),
     background: join(__dirname, 'src/background/'),
@@ -117,4 +116,4 @@ const config = {
 //   ]);
 // }
 
-module.exports = config;
+module.exports = process.env.NODE_ENV === 'production' ? config : { ...config, devtool: 'inline-source-map' };
