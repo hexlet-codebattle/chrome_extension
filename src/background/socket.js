@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 // @ts-check
+import browser from 'webextension-polyfill';
 import { actions$ } from './state';
 
 const isGameWithPlayer = ({ type }) => type !== 'bot' && type !== 'private';
@@ -7,10 +8,14 @@ const isGameWithPlayer = ({ type }) => type !== 'bot' && type !== 'private';
 const socketConnect = (url, socket = new WebSocket(url)) => {
   const getLobby = () => socket.send(JSON.stringify(['7', '7', 'lobby', 'phx_join', {}]));
   const ping = () => socket.send(JSON.stringify([null, '8', 'phoenix', 'heartbeat', {}]));
+  const setUser = () => browser.cookies.get({ name: '_codebattle_key', url: 'https://codebattle.hexlet.io/' });
 
   socket.onopen = () => {
     setInterval(ping, 6000);
     getLobby();
+    setUser().then(cookie => {
+      actions$.next({ type: 'user:update', payload: { key: cookie.value } });
+    });
   };
 
   socket.onmessage = event => {

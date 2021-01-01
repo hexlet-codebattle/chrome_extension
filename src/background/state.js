@@ -44,20 +44,14 @@ const userStateReducer = (state = initialState.user, action = { type: '', payloa
   switch (action.type) {
     case 'add':
     case 'delete':
-    case 'update':
+    case 'update': {
+      return { ...state, ...action.payload };
+    }
     default:
       return state;
   }
 };
-// const userGameStateReducer = (state = initialState.game, action = { type: '', payload: {} }) => {
-//   switch (action.type) {
-//     case 'add':
-//     case 'delete':
-//     case 'update':
-//     default:
-//       return state;
-//   }
-// };
+
 const gamesStateReducer = (
   action = { type: '', payload: null },
 ) => {
@@ -94,17 +88,12 @@ const gamesStateReducer = (
       throw new Error(`Unexpected type: ${type}`);
   }
 };
-// const badgeFlashReducer = (state = initialState.badgeFlashTimerId, action = { type: ''}) => {
-//   switch(action.type) {
-//     case 'activate': {
-//       break;
-//     }
-//   }
-// }
+
 const userActions$ = new ReplaySubject(1);
 const userState$ = userActions$.pipe(
   startWith(initialState.user),
   scan(userStateReducer),
+  tap(user => console.log('User state is = ', user)),
 );
 
 // FIXME: move out state from actions pipe
@@ -124,9 +113,12 @@ actions$.subscribe(message => {
       activeGamesActions$.next({ type: action, payload });
       break;
     }
-    case 'game':
-    case 'user': {
+    case 'game': {
       break;
+    }
+    case 'user': {
+      userActions$.next({ type: action, payload });
+      return;
     }
     default:
       throw new Error(`Unexpected reducer type: ${reducer}`);
@@ -142,6 +134,7 @@ activeGames$
     tap(showWaitingGamesAmount),
   )
   .subscribe();
+userState$.subscribe();
 
 export {
   userState$,
