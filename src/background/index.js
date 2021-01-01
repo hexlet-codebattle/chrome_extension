@@ -1,10 +1,14 @@
 import browser from 'webextension-polyfill';
 import { combineLatest, Subject } from 'rxjs';
 import socketConnect from './socket';
-import { activeGames$, userState$ } from './state';
+import { activeGames$, userState$, actions$ } from './state';
 import { handleOnButtonClicked } from './notification';
 
 const message$ = new Subject();
+const setUser = () => browser.cookies.get({ name: '_codebattle_key', url: 'https://codebattle.hexlet.io/' });
+setUser().then(cookie => {
+  actions$.next({ type: 'user:update', payload: { key: cookie.value } });
+});
 
 browser.runtime.onConnect.addListener(popup => {
   let connected = true;
