@@ -1,14 +1,18 @@
 import browser from 'webextension-polyfill';
 import { combineLatest, Subject } from 'rxjs';
+import axios from 'axios';
 import socketConnect from './socket';
 import { activeGames$, userState$, actions$ } from './state';
 import { handleOnButtonClicked } from './notification';
 
 const message$ = new Subject();
-const setUser = () => browser.cookies.get({ name: '_codebattle_key', url: 'https://codebattle.hexlet.io/' });
-setUser().then(cookie => {
-  actions$.next({ type: 'user:update', payload: { key: cookie.value } });
-});
+const serverUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:4000' : 'https://codebattle.hexlet.io/';
+
+const setUser = () => browser.cookies.get({ name: '_codebattle_key', url: serverUrl });
+setUser()
+  .then(() => axios.get(`${serverUrl}/api/v1/user/current`, { withCredentials: true }))
+  .then(({ data }) => actions$.next({ type: 'user:update', payload: data.user }))
+  .catch(err => console.error(err));
 
 browser.runtime.onConnect.addListener(popup => {
   let connected = true;

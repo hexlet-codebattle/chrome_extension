@@ -7,8 +7,8 @@
     "test": "jest",
     "build": "cross-env NODE_ENV=production webpack --hide-modules",
     "build:dev": "cross-env NODE_ENV=development webpack --hide-modules",
-    "watch": "npm run build -- --watch",
-    "watch:dev": "npm run build:dev -- --watch"
+    "watch": "NODE_ENV=production npm run build -- --watch",
+    "watch:dev": "NODE_ENV=development npm run build:dev -- --watch"
   },
   "jest": {
     "setupFiles": [
@@ -20,6 +20,7 @@
   "license": "ISC",
   "dependencies": {
     "@babel/polyfill": "^7.8.7",
+    "axios": "^0.21.1",
     "bootstrap": "^4.5.0",
     "classnames": "^2.2.6",
     "debug": "^4.1.1",

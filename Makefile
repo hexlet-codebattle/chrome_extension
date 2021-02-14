@@ -4,6 +4,9 @@ install:
 develop:
 	npm run watch:dev
 
+develop-prod:
+	npm run watch
+
 build:
 	npm run build && cp ./manifest.json ./dist
 
