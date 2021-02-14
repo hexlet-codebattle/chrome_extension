@@ -53,7 +53,9 @@ const Players = ({ players }) => {
   );
 };
 
-const getLink = id => `https://codebattle.hexlet.io/games/${id}`;
+const codebattleUrl = 'https://codebattle.hexlet.io/';
+const getLink = id => `${codebattleUrl}games/${id}`;
+const userLink = id => `${codebattleUrl}users/${id}`;
 
 const ActiveGames = ({ games }) => (
   <div className="table-responsive">
@@ -102,18 +104,53 @@ const ActiveGames = ({ games }) => (
     </table>
   </div>
 );
+const UserButton = ({ user }) => {
+  const {
+    name, rating, id, github_id: githubId,
+  } = user;
+  return (
+    <li className="navbar-item text-right">
+      <a href={userLink(id)} target="_ablank" className="navbar-brand d-flex mr-0">
+        <div className="d-flex flex-column">
+          <span>{ name }</span>
+          <span className="text-small">{ rating }</span>
+        </div>
+        <img className="avatar" src={`https://avatars0.githubusercontent.com/u/${githubId}`} alt="User profile avatar" />
+      </a>
+    </li>
+  );
+};
+const SignInButton = () => (
+  <a href={codebattleUrl} target="_ablank" className="mr-0">
+    <div className="cb-a btn  btn-outline-primary btn-outline-orange">Sign In</div>
+  </a>
+);
+const NavBar = ({ user }) => (
+  <nav className="navbar navbar-dark w-100">
+    <ul className="d-flex flex-row navbar-nav justify-content-between w-100">
+      <li className="navbar-item">
+        <a href={codebattleUrl} target="_ablank" className="navbar-brand d-flex">
+          <img className="h-auto" src="../../assets/logo.svg" alt="Logo" />
+          <div className="d-flex flex-column">
+            <span>Codebattle</span>
+            <span className="text-small">by Hexlet’s community</span>
+          </div>
+        </a>
+      </li>
+      {user
+        ? <UserButton user={user} />
+        : <li className="navbar-item d-flex align-items-center"><SignInButton /></li>}
+    </ul>
+  </nav>
+);
 
 export default ({ state }) => {
   const { active_games: activeGames } = state.games;
+  const { user } = state.info;
   return (
     <>
-      <header className="cb-a d-flex justify-content-between align-content-center mb-3">
-        <a href="https://codebattle.hexlet.io/" target="_ablank">
-          <img className="h-auto" src="../../assets/logo.svg" alt="Logo" />
-        </a>
-        <a href="https://codebattle.hexlet.io/" target="_ablank">
-          <div className="cb-a btn  btn-outline-primary btn-outline-orange">Welcome to CodeBattle</div>
-        </a>
+      <header className="cb-a d-flex justify-content-between align-content-center mb-3 bg-dark">
+        <NavBar user={user} />
       </header>
       <main>
         {activeGames.length > 0 ? <ActiveGames games={activeGames} />

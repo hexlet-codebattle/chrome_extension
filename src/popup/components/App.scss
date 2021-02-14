@@ -11,10 +11,9 @@ $orange: rgba(238, 55, 55, 0.76);
 body {
   min-width: 500px;
   max-width: 600px;
-  padding: 1rem 0;
+  padding-bottom: 1rem;
   background-color: #e5e5e5;
   font-family: "Source Code Pro", sans-serif;
-
 }
 
 .cb-a {
@@ -34,4 +33,15 @@ body {
   border-radius: 0;
   border-width: 2px;
   @include button-outline-variant($orange);
+}
+#root.container-fluid {
+  padding: unset;
+}
+.text-small {
+  font-size: 1rem;
+}
+.navbar-item .avatar {
+  max-width: 3rem;
+  max-height: 3rem;
+  border-radius: 50%;
 }

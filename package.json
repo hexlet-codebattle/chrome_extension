@@ -1,6 +1,6 @@
 {
   "name": "react-extension",
-  "version": "0.1.0",
+  "version": "0.1.6",
   "description": "Hand-made boilerplate for react-extension",
   "main": "index.js",
   "scripts": {

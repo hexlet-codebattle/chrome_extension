@@ -11,7 +11,8 @@ const serverUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:400
 const setUser = () => browser.cookies.get({ name: '_codebattle_key', url: serverUrl });
 setUser()
   .then(() => axios.get(`${serverUrl}/api/v1/user/current`, { withCredentials: true }))
-  .then(({ data }) => actions$.next({ type: 'user:update', payload: data.user }))
+  .then(({ data: { id } }) => axios.get(`${serverUrl}/api/v1/user/${id}/stats`, { withCredentials: true }))
+  .then(({ data }) => actions$.next({ type: 'user:update', payload: data }))
   .catch(err => console.error(err));
 
 browser.runtime.onConnect.addListener(popup => {
@@ -26,7 +27,7 @@ browser.runtime.onConnect.addListener(popup => {
       if (connected) {
         switch (message.action) {
           case 'getState': {
-            popup.postMessage({ games: { active_games: activeGames }, user: userState });
+            popup.postMessage({ games: { active_games: activeGames }, info: userState });
             break;
           }
           default:
