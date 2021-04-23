@@ -4,7 +4,6 @@ import { ReplaySubject, Subject, BehaviorSubject } from 'rxjs';
 import {
   tap,
   scan,
-  startWith,
 } from 'rxjs/operators';
 import { animateBadge, showNotification, setBadge } from './browser-actions';
 import { gameStatuses } from './models';
@@ -40,7 +39,7 @@ const initialState = {
     state: null,
   },
 };
-const userStateReducer = (state = initialState.user, action = { type: '', payload: {} }) => {
+const userStateReducer = (state, action = { type: '', payload: {} }) => {
   switch (action.type) {
     case 'add':
     case 'delete':
@@ -91,8 +90,7 @@ const gamesStateReducer = (
 
 const userActions$ = new ReplaySubject(1);
 const userState$ = userActions$.pipe(
-  startWith(initialState.user),
-  scan(userStateReducer),
+  scan(userStateReducer, initialState.user),
   tap(user => console.log('User state is = ', user)),
 );
 
@@ -134,7 +132,6 @@ activeGames$
     tap(showWaitingGamesAmount),
   )
   .subscribe();
-userState$.subscribe();
 
 export {
   userState$,
