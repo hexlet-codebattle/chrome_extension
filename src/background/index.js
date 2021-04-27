@@ -6,7 +6,12 @@ import { activeGames$, userState$, actions$ } from './state';
 import { handleOnButtonClicked } from './notification';
 
 const message$ = new Subject();
-const serverUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:4000' : 'https://codebattle.hexlet.io/';
+const serverUrl = process.env.NODE_ENV === 'development'
+  ? 'http://localhost:4000'
+  : 'https://codebattle.hexlet.io/';
+const socketUrl = process.env.NODE_ENV === 'development'
+  ? 'ws://localhost:4000/extension/websocket?vsn=2.0.0'
+  : 'wss://codebattle.hexlet.io/extension/websocket?vsn=2.0.0';
 
 const setUser = () => browser.cookies.get({ name: '_codebattle_key', url: serverUrl });
 setUser()
@@ -42,4 +47,4 @@ browser.runtime.onConnect.addListener(popup => {
   });
 });
 browser.notifications.onButtonClicked.addListener(handleOnButtonClicked);
-socketConnect('wss://codebattle.hexlet.io/extension/websocket?vsn=2.0.0');
+socketConnect(socketUrl);
