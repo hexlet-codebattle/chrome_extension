@@ -1,8 +1,8 @@
 # Codebattle Chrome extension
 
-Браузерное расширение для проекта [codebattle.hexlet.io](https://codebattle.hexlet.io).
-CodeBattle - это проект с открытым исходным кодом, который разрабатывается сообществом Хекслета.
-Текущая версия приложения доступна в [магазине расширений](https://chrome.google.com/webstore/detail/codebattle-web-extension/embfhnfkfobkdohleknckodkmhgmpdli).
+Browser extension for the [codebattle.hexlet.io](https://codebattle.hexlet.io) project.
+CodeBattle is an open-source project that is developing by the Hexlet community.
+Up-to-date app version can be found on [web store](https://chrome.google.com/webstore/detail/codebattle-web-extension/embfhnfkfobkdohleknckodkmhgmpdli).
 
 ### Requirements
 
@@ -27,7 +27,7 @@ $ make install
 
 ### Getting Started 
 
-- Руководство по началу работы с расширениями <https://developer.chrome.com/extensions/getstarted> 
-- Примеры расширений <https://developer.chrome.com/extensions/samples>
+- Guide on working with Chrome extensions <https://developer.chrome.com/extensions/getstarted> 
+- Extension examples <https://developer.chrome.com/extensions/samples>
 
 
