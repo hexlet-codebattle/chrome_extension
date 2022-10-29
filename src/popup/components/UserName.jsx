@@ -13,6 +13,10 @@ const getName = ({ id, name }) => {
   return name;
 };
 
+const codebattleUrl = 'https://codebattle.hexlet.io/';
+
+const getUserLink = id => `${codebattleUrl}users/${id}`;
+
 const UserName = ({ user }) => {
   const userInfo = isValidUserInfo(user) ? user : 'errorValidInfo';
 
@@ -25,7 +29,7 @@ const UserName = ({ user }) => {
     >
       <div className="d-flex align-items-center">
         <a
-          href={`/users/${id}`}
+          href={getUserLink(id)}
           target="_ablank"
           key={id}
           className="d-flex align-items-center mr-1 text-truncate"
