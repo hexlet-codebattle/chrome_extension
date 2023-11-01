@@ -22,7 +22,7 @@ $ make install
 
 ### Support
 
-- <https://t.me/hexletcommunity> channel: Codebattle
+- <https://hexlet-ru.slack.com> channel: codebattle
 
 
 ### Getting Started 
